@@ -77,9 +77,25 @@
 
     .type-img {
       height: 30px;
+      width: 80px;
       opacity: 0.75;
       border: 1px solid $blue;
       border-radius: 4px;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-size: cover;
+
+      &.food {
+        background-image: url('../../assets/images/food-type.jpg');
+      }
+
+      &.material {
+        background-image: url('../../assets/images/material-type.jpg');
+      }
+
+      &.science {
+        background-image: url('../../assets/images/science-type.jpg');
+      }
     }
   }
 }

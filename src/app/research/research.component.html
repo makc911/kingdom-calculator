@@ -34,8 +34,7 @@
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
             <td mat-cell *matCellDef="let element">
-<!--                {{element.type}}-->
-                <img [src]="getTypeImagePath(element.type)" class="type-img" alt="">
+                <div class="type-img {{element.type}}"></div>
             </td>
         </ng-container>
 
