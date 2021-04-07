@@ -10,6 +10,13 @@ export class HelperService {
 
   constructor() { }
 
+  public getResearchForTarget(building: IBuilding): number {
+    const levels = [... new Array(building.targetLevel - building.currentLevel)].map((i, index) => index + building.currentLevel);
+    return levels.reduce((acc, level) => {
+      return acc + this.getResearchCost({...building, currentLevel: level});
+    }, 0);
+  }
+
   public getResearchCost(building: IBuilding): number {
     if (Number(building.currentLevel) === 0) {
       return building.baseCost / 256;

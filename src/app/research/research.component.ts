@@ -18,6 +18,7 @@ export class ResearchComponent implements OnInit, AfterViewInit {
   public buildingsData;
   public displayedColumns: Array<string>;
   public universitySpeed: string = null;
+  public isTargetLevel: boolean;
 
   private uniSpeedNumber: number;
   private buildings: Array<IBuilding> = [...BUILDINGS];
@@ -28,7 +29,7 @@ export class ResearchComponent implements OnInit, AfterViewInit {
       private storageService: StorageService,
   ) {
     this.buildingsData = new MatTableDataSource<IBuilding>(this.buildings);
-    this.displayedColumns = ['title', 'currentLevel', 'type', 'costAA', 'costE', 'researchSeconds', 'researchDuration'];
+    this.displayedColumns = ['title', 'currentLevel', 'type', 'costAA', 'costE', 'researchDuration']; // 'researchSeconds'
   }
 
   public onLevelChanged(building: IBuilding): void {
@@ -36,8 +37,19 @@ export class ResearchComponent implements OnInit, AfterViewInit {
     if (building.currentLevel < minLevel) {
       building.currentLevel = minLevel;
     }
-    if (building.currentLevel > 60) {
+    if (building.currentLevel > (building.maxLevel || 60)) {
       building.currentLevel = 60;
+    }
+
+    this.onTargetLevelChanged(building);
+  }
+
+  public onTargetLevelChanged(building: IBuilding): void {
+    if (building.targetLevel < building.currentLevel + 1) {
+      building.targetLevel = building.currentLevel + 1;
+    }
+    if (building.targetLevel > (building.maxLevel || 61)) {
+      building.targetLevel = 61;
     }
 
     this.calculateResearch(building);
@@ -49,13 +61,33 @@ export class ResearchComponent implements OnInit, AfterViewInit {
   }
 
   public onSaveBtnClick(): void {
-    this.storageService.storeResearchUserData({buildings: this.buildings, university: this.universitySpeed});
+    this.storageService.storeResearchUserData({
+      buildings: this.buildings,
+      university: this.universitySpeed,
+      isTargetLevelShown: this.isTargetLevel
+    });
   }
 
   public onResetBtnClick(): void {
-    this.buildings.forEach(building => building.currentLevel = 1);
+    this.buildings.forEach(building => {
+      building.currentLevel = 1;
+      building.targetLevel = building.currentLevel + 1;
+    });
     this.universitySpeed = null;
+    this.isTargetLevel = false;
+    this.displayedColumns = this.displayedColumns.filter(column => column !== 'targetLevel');
     this.onUniSpeedChange();
+  }
+
+  public onTargetLevelSwitched(): void {
+    if (this.isTargetLevel) {
+      const pos = this.displayedColumns.indexOf('currentLevel') || 0;
+      this.displayedColumns.splice(pos + 1, 0, 'targetLevel');
+      this.buildings.forEach(building => building.targetLevel = building.currentLevel + 1);
+    } else {
+      this.displayedColumns = this.displayedColumns.filter(column => column !== 'targetLevel');
+    }
+    this.calculateResearchesTime();
   }
 
   public getScienceNumber(cost: number): string {
@@ -88,16 +120,11 @@ export class ResearchComponent implements OnInit, AfterViewInit {
     return result || 'less then 1s';
   }
 
-  public getTypeImagePath(type: string): string {
-    return `../../assets/images/${type}-type.jpg`;
-  }
-
   public isUniversitySpeedValid(): boolean {
     return this.universitySpeed === null ? true : !!this.uniSpeedNumber;
   }
 
   ngOnInit(): void {
-    const d = this.storageService.getResearchUserData();
     this.provideStoredUserData();
     this.onUniSpeedChange();
     this.calculateResearchesTime();
@@ -108,17 +135,25 @@ export class ResearchComponent implements OnInit, AfterViewInit {
   }
 
   private provideStoredUserData(): void {
+
     const storedData = this.storageService.getResearchUserData();
     if (!storedData) {
       return;
     }
 
     this.universitySpeed = storedData.university || null;
+    this.isTargetLevel = storedData.isTargetLevelShown;
+    if (this.isTargetLevel) {
+      const pos = this.displayedColumns.indexOf('currentLevel') || 0;
+      this.displayedColumns.splice(pos + 1, 0, 'targetLevel');
+    }
+
     this.buildings.forEach(building => {
       const stored = storedData.buildings.find(e => e.key === building.key);
       if (stored) {
         building.progress = stored.progress || 0;
         building.currentLevel = stored.currentLevel || 1;
+        building.targetLevel = stored.targetLevel || 1;
       }
     });
   }
@@ -130,7 +165,9 @@ export class ResearchComponent implements OnInit, AfterViewInit {
   }
 
   private calculateResearch(building: IBuilding): void {
-    building.researchCost = this.helper.getResearchCost(building);
+    building.researchCost = this.isTargetLevel
+        ? this.helper.getResearchForTarget(building)
+        : this.helper.getResearchCost(building);
     building.costAA = this.helper.transformToAAFormat(building.researchCost);
     building.costE = this.getScienceNumber(building.researchCost);
 

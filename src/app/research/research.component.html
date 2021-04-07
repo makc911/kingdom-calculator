@@ -24,6 +24,12 @@
             </button>
         </div>
     </div>
+    <div class="table-settings">
+        <mat-checkbox [(ngModel)]="isTargetLevel"
+                      (ngModelChange)="onTargetLevelSwitched()">
+            Show Target level
+        </mat-checkbox>
+    </div>
     <table mat-table [dataSource]="buildingsData" matSort class="research-time-table">
 
         <ng-container matColumnDef="title">
@@ -39,10 +45,19 @@
         </ng-container>
 
         <ng-container matColumnDef="currentLevel">
-            <th mat-header-cell class="level-input" *matHeaderCellDef mat-sort-header> Current level </th>
+            <th mat-header-cell class="level-input-header" *matHeaderCellDef mat-sort-header> Current level </th>
             <td mat-cell *matCellDef="let element">
                 <mat-form-field class="level-input">
-                    <input matInput type="number" [(ngModel)]="element.currentLevel" max="60" min="1" (change)="onLevelChanged(element)">
+                    <input matInput type="number" [(ngModel)]="element.currentLevel" max="60" min="0" (change)="onLevelChanged(element)">
+                </mat-form-field>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="targetLevel">
+            <th mat-header-cell class="level-input-header" *matHeaderCellDef mat-sort-header> Target level </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-form-field class="level-input">
+                    <input matInput type="number" [(ngModel)]="element.targetLevel" max="61" min="0" (change)="onTargetLevelChanged(element)">
                 </mat-form-field>
             </td>
         </ng-container>
@@ -54,7 +69,7 @@
 
         <ng-container matColumnDef="costE">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cost (science) </th>
-            <td mat-cell *matCellDef="let element"> {{element.costE}} </td>
+            <td mat-cell *matCellDef="let element" style="text-align: right"> {{element.costE}} </td>
         </ng-container>
 
         <ng-container matColumnDef="researchSeconds">

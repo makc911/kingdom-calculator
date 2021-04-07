@@ -20,9 +20,10 @@ export class StorageService {
     }
   }
 
-  public storeResearchUserData(data: {buildings: Array<IBuilding>, university: string}): void {
+  public storeResearchUserData(data: {buildings: Array<IBuilding>, university: string, isTargetLevelShown: boolean}): void {
     const dataToSave = {
       university: data.university,
+      isTargetLevelShown: data.isTargetLevelShown,
       buildings: this.getLevelData(data.buildings)
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
@@ -32,6 +33,7 @@ export class StorageService {
     return buildings.map(item => ({
       key: item.key,
       currentLevel: item.currentLevel,
+      targetLevel: item.targetLevel,
       progress: item.progress,
     }));
   }

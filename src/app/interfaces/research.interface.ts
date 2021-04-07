@@ -6,6 +6,7 @@ export interface IBuilding {
     researchCost?: number;
     type: 'science' | 'material' | 'food';
     currentLevel?: number;
+    targetLevel?: number;
     progress: number;
     researchSeconds?: number;
     researchDuration?: number;
@@ -23,11 +24,13 @@ export interface IResearchMultiplier {
 
 export interface IStoredResearchData {
     university: string;
+    isTargetLevelShown: boolean;
     buildings: Array<IStoredBuilding>;
 }
 
 export interface IStoredBuilding {
     key: string;
     currentLevel: number;
+    targetLevel?: number;
     progress?: number;
 }
