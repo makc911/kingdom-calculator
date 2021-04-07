@@ -9,6 +9,7 @@ export const BUILDINGS: Array<IBuilding> = [
         type: 'food',
         progress: 0,
         currentLevel: 1,
+        minLevel: 1,
     },
     {
         key: 'foodStore',
@@ -18,6 +19,7 @@ export const BUILDINGS: Array<IBuilding> = [
         type: 'food',
         progress: 0,
         currentLevel: 1,
+        minLevel: 1,
     },
     {
         key: 'winery',
@@ -81,6 +83,7 @@ export const BUILDINGS: Array<IBuilding> = [
         type: 'material',
         progress: 0,
         currentLevel: 1,
+        minLevel: 1,
     },
     {
         key: 'woodcutter',
@@ -90,6 +93,7 @@ export const BUILDINGS: Array<IBuilding> = [
         type: 'material',
         progress: 0,
         currentLevel: 1,
+        minLevel: 1,
     },
     {
         key: 'clayPit',
@@ -153,6 +157,7 @@ export const BUILDINGS: Array<IBuilding> = [
         type: 'science',
         progress: 0,
         currentLevel: 1,
+        minLevel: 1,
     },
     {
         key: 'shaman',
@@ -162,6 +167,7 @@ export const BUILDINGS: Array<IBuilding> = [
         type: 'science',
         progress: 0,
         currentLevel: 1,
+        minLevel: 1,
     },
     {
         key: 'adeptShack',
@@ -208,6 +214,17 @@ export const BUILDINGS: Array<IBuilding> = [
         progress: 0,
         currentLevel: 1,
     },
+    // {
+    //     key: 'university',
+    //     title: 'University',
+    //     baseCost: 1.1994E+26,
+    //     researchCost: 1.1994E+26,
+    //     type: 'science',
+    //     progress: 0,
+    //     currentLevel: 1,
+    //     minLevel: 1,
+    //     maxLevel: 4,
+    // },
 
 
 ];

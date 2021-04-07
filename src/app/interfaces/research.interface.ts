@@ -11,6 +11,8 @@ export interface IBuilding {
     researchDuration?: number;
     costAA?: string;
     costE?: string;
+    minLevel?: number;
+    maxLevel?: number;
 }
 
 export interface IResearchMultiplier {

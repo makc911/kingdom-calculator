@@ -32,8 +32,9 @@ export class ResearchComponent implements OnInit, AfterViewInit {
   }
 
   public onLevelChanged(building: IBuilding): void {
-    if (building.currentLevel < 1) {
-      building.currentLevel = 1;
+    const minLevel = building.minLevel ? building.minLevel : 0;
+    if (building.currentLevel < minLevel) {
+      building.currentLevel = minLevel;
     }
     if (building.currentLevel > 60) {
       building.currentLevel = 60;
@@ -70,7 +71,7 @@ export class ResearchComponent implements OnInit, AfterViewInit {
 
   public getTimeDuration(seconds: number): string {
     if (!seconds) {
-      return '----';
+      return '--';
     }
     const duration = moment.duration(seconds, 's');
 
@@ -140,17 +141,6 @@ export class ResearchComponent implements OnInit, AfterViewInit {
     }
 
     const seconds = (building.researchCost || 0) / this.uniSpeedNumber;
-    // const duration = moment.duration(seconds, 's');
-    //
-    // const result = this.timeMarkers.reduce((acc, marker) => {
-    //   // @ts-ignore
-    //   const value = duration._data[marker];
-    //   acc += !value && !acc ? '' : `${value > 99999 ? this.getScienceNumber(value) : value} ${marker} `;
-    //   return acc;
-    // }, '')
-    //     .replace(' seconds', 's')
-    //     .replace(' minutes', 'm')
-    //     .replace(' hours', 'h');
 
     building.researchSeconds =  seconds;
     building.researchDuration = seconds;

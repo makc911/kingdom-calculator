@@ -11,6 +11,9 @@ export class HelperService {
   constructor() { }
 
   public getResearchCost(building: IBuilding): number {
+    if (Number(building.currentLevel) === 0) {
+      return building.baseCost / 256;
+    }
     return [... Array(building.currentLevel)].map((e, i) => i + 1).reduce((acc, l) => {
       const mod = l % 10;
       const pow = Math.floor((l - 1) / 10);
@@ -19,15 +22,6 @@ export class HelperService {
           ? building.baseCost
           : acc * mul.value * Math.pow(mul.changeMulti, pow);
     }, 0);
-  }
-
-  public getCostAA(building: IBuilding): string {
-    const cost = building.researchCost;
-    if (!cost) {
-      return '-';
-    }
-    const log = Math.floor(Math.log10(cost));
-    return `${(cost / Math.pow(10, log - log % 3)).toFixed(2)}${NUMBERS_KEYS[log - log % 3]}`;
   }
 
   public transformToAAFormat(value: number): string {
