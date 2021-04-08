@@ -34,7 +34,7 @@
 
         <ng-container matColumnDef="title">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Building </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+            <td mat-cell *matCellDef="let element">{{element.title}}</td>
         </ng-container>
 
         <ng-container matColumnDef="type">
@@ -48,7 +48,11 @@
             <th mat-header-cell class="level-input-header" *matHeaderCellDef mat-sort-header> Current level </th>
             <td mat-cell *matCellDef="let element">
                 <mat-form-field class="level-input">
-                    <input matInput type="number" [(ngModel)]="element.currentLevel" max="60" min="0" (change)="onLevelChanged(element)">
+                    <input matInput type="number"
+                           [(ngModel)]="element.currentLevel"
+                           max="{{element.maxLevel ? element.maxLevel : 60}}"
+                           min="{{element.minLevel ? element.minLevel : 0}}"
+                           (change)="onLevelChanged(element)">
                 </mat-form-field>
             </td>
         </ng-container>
@@ -57,19 +61,23 @@
             <th mat-header-cell class="level-input-header" *matHeaderCellDef mat-sort-header> Target level </th>
             <td mat-cell *matCellDef="let element">
                 <mat-form-field class="level-input">
-                    <input matInput type="number" [(ngModel)]="element.targetLevel" max="61" min="0" (change)="onTargetLevelChanged(element)">
+                    <input matInput type="number"
+                           [(ngModel)]="element.targetLevel"
+                           max="{{element.maxLevel ? element.maxLevel + 1 : 61}}"
+                           min="{{element.minLevel ? element.minLevel + 1 : 1}}"
+                           (change)="onTargetLevelChanged(element)">
                 </mat-form-field>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="costAA">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cost (aa) </th>
-            <td mat-cell *matCellDef="let element" style="text-align: right"> {{element.costAA}} </td>
+            <td mat-cell *matCellDef="let element" style="text-align: right"> {{getCostAA(element.researchCost)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="costE">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cost (science) </th>
-            <td mat-cell *matCellDef="let element" style="text-align: right"> {{element.costE}} </td>
+            <td mat-cell *matCellDef="let element" style="text-align: right"> {{getCostE(element.researchCost)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="researchSeconds">

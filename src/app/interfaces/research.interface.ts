@@ -10,10 +10,13 @@ export interface IBuilding {
     progress: number;
     researchSeconds?: number;
     researchDuration?: number;
-    costAA?: string;
-    costE?: string;
+    costAA?: number;
+    costE?: number;
     minLevel?: number;
     maxLevel?: number;
+    levelsCost?: {
+        [key: string]: number,
+    };
 }
 
 export interface IResearchMultiplier {

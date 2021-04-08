@@ -21,6 +21,9 @@ export class HelperService {
     if (Number(building.currentLevel) === 0) {
       return building.baseCost / 256;
     }
+    if (building.levelsCost && building.levelsCost[building.currentLevel]) {
+      return building.levelsCost[building.currentLevel];
+    }
     return [... Array(building.currentLevel)].map((e, i) => i + 1).reduce((acc, l) => {
       const mod = l % 10;
       const pow = Math.floor((l - 1) / 10);

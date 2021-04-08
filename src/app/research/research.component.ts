@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {BUILDINGS, KEYS_EXPONENT, NUMBERS_KEYS} from '../data/research.constant';
+import {BUILDINGS} from '../data/research.constant';
 import {IBuilding} from '../interfaces/research.interface';
 import {MatTableDataSource} from '@angular/material/table';
 import {HelperService} from '../services/helper.service';
@@ -34,22 +34,33 @@ export class ResearchComponent implements OnInit, AfterViewInit {
 
   public onLevelChanged(building: IBuilding): void {
     const minLevel = building.minLevel ? building.minLevel : 0;
+    const maxLevel = building.maxLevel ? building.maxLevel : 60;
+
     if (building.currentLevel < minLevel) {
       building.currentLevel = minLevel;
     }
-    if (building.currentLevel > (building.maxLevel || 60)) {
-      building.currentLevel = 60;
+    if (building.currentLevel > maxLevel) {
+      building.currentLevel = maxLevel;
+    }
+    if (building.targetLevel <= building.currentLevel) {
+      building.targetLevel = building.currentLevel + 1;
     }
 
-    this.onTargetLevelChanged(building);
+    this.calculateResearch(building);
   }
 
   public onTargetLevelChanged(building: IBuilding): void {
-    if (building.targetLevel < building.currentLevel + 1) {
-      building.targetLevel = building.currentLevel + 1;
+    const minLevel = building.minLevel ? building.minLevel + 1 : 1;
+    const maxLevel = building.maxLevel + 1;
+
+    if (building.targetLevel < minLevel) {
+      building.targetLevel = minLevel;
     }
-    if (building.targetLevel > (building.maxLevel || 61)) {
-      building.targetLevel = 61;
+    if (building.targetLevel > maxLevel) {
+      building.targetLevel = maxLevel;
+    }
+    if (building.currentLevel >= building.targetLevel) {
+      building.currentLevel = building.targetLevel - 1;
     }
 
     this.calculateResearch(building);
@@ -124,6 +135,14 @@ export class ResearchComponent implements OnInit, AfterViewInit {
     return this.universitySpeed === null ? true : !!this.uniSpeedNumber;
   }
 
+  public getCostAA(value: number): string {
+    return this.helper.transformToAAFormat(value);
+  }
+
+  public getCostE(value: number): string {
+    return this.getScienceNumber(value);
+  }
+
   ngOnInit(): void {
     this.provideStoredUserData();
     this.onUniSpeedChange();
@@ -150,11 +169,9 @@ export class ResearchComponent implements OnInit, AfterViewInit {
 
     this.buildings.forEach(building => {
       const stored = storedData.buildings.find(e => e.key === building.key);
-      if (stored) {
-        building.progress = stored.progress || 0;
-        building.currentLevel = stored.currentLevel || 1;
-        building.targetLevel = stored.targetLevel || 1;
-      }
+      building.progress = stored?.progress || 0;
+      building.currentLevel = stored?.currentLevel || building.currentLevel || 1;
+      building.targetLevel = stored?.targetLevel || building.currentLevel + 1;
     });
   }
 
@@ -168,8 +185,9 @@ export class ResearchComponent implements OnInit, AfterViewInit {
     building.researchCost = this.isTargetLevel
         ? this.helper.getResearchForTarget(building)
         : this.helper.getResearchCost(building);
-    building.costAA = this.helper.transformToAAFormat(building.researchCost);
-    building.costE = this.getScienceNumber(building.researchCost);
+
+    building.costAA = building.researchCost;
+    building.costE = building.researchCost;
 
     if (!this.uniSpeedNumber) {
       building.researchSeconds = null;

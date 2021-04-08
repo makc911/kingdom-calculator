@@ -1,11 +1,11 @@
 {
   "name": "kingdom-calculator",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build-gp": "ng build --prod --base-href 'https://makc911.github.io/kingdom-calculator/'",
+    "build-gp": "ng build --prod --base-href https://makc911.github.io/kingdom-calculator/",
     "push-gp": "npx angular-cli-ghpages --dir=dist/kingdom-calculator",
     "test": "ng test",
     "lint": "ng lint",

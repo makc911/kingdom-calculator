@@ -214,17 +214,23 @@ export const BUILDINGS: Array<IBuilding> = [
         progress: 0,
         currentLevel: 1,
     },
-    // {
-    //     key: 'university',
-    //     title: 'University',
-    //     baseCost: 1.1994E+26,
-    //     researchCost: 1.1994E+26,
-    //     type: 'science',
-    //     progress: 0,
-    //     currentLevel: 1,
-    //     minLevel: 1,
-    //     maxLevel: 4,
-    // },
+    {
+        key: 'university',
+        title: 'University',
+        baseCost: 3620000000000000,
+        researchCost: 3620000000000000,
+        type: 'science',
+        progress: 0,
+        currentLevel: 1,
+        minLevel: 1,
+        maxLevel: 4,
+        levelsCost: {
+            1: 3620000000000000,
+            2: 6.628E+25,
+            3: 1.0987E+35,
+            4: 3.92E+48,
+        }
+    },
 
 
 ];
